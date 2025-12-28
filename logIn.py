@@ -1,25 +1,22 @@
-
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout, QFrame
+    QVBoxLayout, QHBoxLayout, QFrame, QStackedWidget, QLineEdit
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
-import os
 import sys
 
-class LogInWindow(QMainWindow):
-    def __init__(self):
+from app import Dashboard   # your existing dashboard class
+
+
+class LogInPage(QWidget):
+    def __init__(self, switch_to_dashboard_callback):
         super().__init__()
-        self.setWindowTitle("Trakka - Log In")
-        self.setMinimumSize(1000, 600)
-        self.initUI()
+        self.switch_to_dashboard = switch_to_dashboard_callback
+        
+        
 
-    def initUI(self):
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-
-        central_widget.setStyleSheet("""
+        self.setStyleSheet("""
             QWidget {
                 background-color: #0f172a;
                 color: white;
@@ -43,11 +40,12 @@ class LogInWindow(QMainWindow):
                 background-color: #334155;
             }
         """)
+        self.setAutoFillBackground(True)
 
-        main_layout = QVBoxLayout()
+        main_layout = QVBoxLayout(self)
 
         title_label = QLabel("Trakka")
-        title_font = QFont("Arial", 16, QFont.Weight.Bold)
+        title_font = QFont("Arial", 24, QFont.Weight.Bold)
         title_label.setFont(title_font)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(title_label)
@@ -73,13 +71,39 @@ class LogInWindow(QMainWindow):
         guest_button.clicked.connect(self.handle_guest)
         main_layout.addWidget(guest_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        central_widget.setLayout(main_layout)
-
     def handle_login(self):
         print("Log In button clicked")
+        
 
     def handle_signup(self):
         print("Sign Up button clicked")
 
     def handle_guest(self):
         print("Continue as Guest button clicked")
+        self.switch_to_dashboard() 
+
+
+class LogInWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Trakka - Log In")
+        self.setMinimumSize(1000, 600)
+
+        # Stacked widget as the ONE central widget
+        self.stack = QStackedWidget()
+        self.setCentralWidget(self.stack)
+
+        # Pages
+        self.login_page = LogInPage(self.show_dashboard)
+        self.dashboard_page = Dashboard()  
+
+        self.stack.addWidget(self.login_page)      
+        self.stack.addWidget(self.dashboard_page)  
+
+        self.stack.setCurrentIndex(0) 
+
+    def show_dashboard(self):
+        self.stack.setCurrentIndex(1)
+
+
+

@@ -10,10 +10,10 @@ import sys
 
 
 
-class ModernDashboard(QMainWindow):
+class Dashboard(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Modern PyQt Dashboard")
+        self.setWindowTitle("Trakka Dashboard")
         self.setMinimumSize(1000, 600)
 
         # Central widget

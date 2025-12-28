@@ -8,6 +8,8 @@ from PyQt6.QtGui import QFont
 import os
 import sys
 
+
+
 class ModernDashboard(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -100,8 +102,3 @@ class ModernDashboard(QMainWindow):
         main_layout.addWidget(sidebar)
         main_layout.addWidget(content)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = ModernDashboard()
-    window.show()
-    sys.exit(app.exec())

@@ -13,8 +13,8 @@ class LogInPage(QWidget):
     def __init__(self, switch_to_dashboard_callback):
         super().__init__()
         self.switch_to_dashboard = switch_to_dashboard_callback
-        
-        
+
+
 
         self.setStyleSheet("""
             QWidget {
@@ -22,6 +22,7 @@ class LogInPage(QWidget):
                 color: white;
                 font-family: Segoe UI;
             }
+           
             QLineEdit {
                 background-color: #1e293b;
                 border-radius: 8px;
@@ -30,20 +31,22 @@ class LogInPage(QWidget):
                 border: none;
             }
             QPushButton {
+            
                 background-color: #1e293b;
                 color: white;
                 border-radius: 8px;
                 padding: 10px;
                 font-size: 15px;
             }
+             
             QPushButton:hover {
                 background-color: #334155;
             }
         """)
-        self.setAutoFillBackground(True)
-
+        #]when self.setAutoFillBackground(True)
         main_layout = QVBoxLayout(self)
-
+        #main_layout.setContentsMargins(50, 50, 50, 50)  # Make background visible around buttons
+        #main_layout.setSpacing(20)
         title_label = QLabel("Trakka")
         title_font = QFont("Arial", 24, QFont.Weight.Bold)
         title_label.setFont(title_font)
@@ -51,8 +54,11 @@ class LogInPage(QWidget):
         main_layout.addWidget(title_label)
 
         button_layout = QHBoxLayout()
+        lower_button_layout = QHBoxLayout()
 
         login_button = QPushButton("Log In")
+        #login_button.setStyleSheet("background-color: #0f172a;")
+
         login_button.clicked.connect(self.handle_login)
         button_layout.addWidget(login_button)
 
@@ -60,16 +66,27 @@ class LogInPage(QWidget):
         signup_button.clicked.connect(self.handle_signup)
         button_layout.addWidget(signup_button)
 
-        main_layout.addLayout(button_layout)
-
-        separator = QFrame()
-        separator.setFrameShape(QFrame.Shape.HLine)
-        separator.setFrameShadow(QFrame.Shadow.Sunken)
-        main_layout.addWidget(separator)
-
         guest_button = QPushButton("Continue as Guest")
         guest_button.clicked.connect(self.handle_guest)
-        main_layout.addWidget(guest_button, alignment=Qt.AlignmentFlag.AlignCenter)
+        guest_button.setFixedWidth(500)
+        lower_button_layout.addWidget(guest_button)
+        #main_layout.addWidget(guest_button)
+
+        main_layout.addLayout(button_layout)
+        main_layout.addLayout(lower_button_layout)
+
+        # separator = QFrame()
+        # separator.setFrameShape(QFrame.Shape.HLine)
+        # separator.setFrameShadow(QFrame.Shadow.Sunken)
+        # main_layout.addWidget(separator)
+
+
+
+
+
+
+
+
 
     def handle_login(self):
         print("Log In button clicked")
@@ -88,6 +105,7 @@ class LogInWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Trakka - Log In")
         self.setMinimumSize(1000, 600)
+        self.setStyleSheet("background-color: #0f172a;")  # Replace with any color
 
         # Stacked widget as the ONE central widget
         self.stack = QStackedWidget()

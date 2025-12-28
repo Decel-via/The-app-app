@@ -11,13 +11,38 @@ import sys
 class LogInWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Log In")
-        self.setGeometry(100, 100, 400, 300)
+        self.setWindowTitle("Trakka - Log In")
+        self.setMinimumSize(1000, 600)
         self.initUI()
 
     def initUI(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
+
+        central_widget.setStyleSheet("""
+            QWidget {
+                background-color: #0f172a;
+                color: white;
+                font-family: Segoe UI;
+            }
+            QLineEdit {
+                background-color: #1e293b;
+                border-radius: 8px;
+                padding: 10px;
+                color: white;
+                border: none;
+            }
+            QPushButton {
+                background-color: #1e293b;
+                color: white;
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 15px;
+            }
+            QPushButton:hover {
+                background-color: #334155;
+            }
+        """)
 
         main_layout = QVBoxLayout()
 

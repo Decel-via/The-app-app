@@ -61,7 +61,6 @@ class StartUpPage(QWidget):
         lower_button_layout = QHBoxLayout()
 
         login_button = QPushButton("Log In")
-        #login_button.setStyleSheet("background-color: #0f172a;")
 
         login_button.clicked.connect(self.handle_login)
         button_layout.addWidget(login_button)
@@ -74,18 +73,9 @@ class StartUpPage(QWidget):
         guest_button.clicked.connect(self.handle_guest)
         guest_button.setFixedWidth(500)
         lower_button_layout.addWidget(guest_button)
-        #main_layout.addWidget(guest_button)
 
         main_layout.addLayout(button_layout)
         main_layout.addLayout(lower_button_layout)
-
-        # separator = QFrame()
-        # separator.setFrameShape(QFrame.Shape.HLine)
-        # separator.setFrameShadow(QFrame.Shadow.Sunken)
-        # main_layout.addWidget(separator)
-
-
-
 
     def handle_login(self):
         print("Log In button clicked")

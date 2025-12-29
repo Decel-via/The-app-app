@@ -42,21 +42,38 @@ class LoginPage(QWidget):
         title.setFont(QFont("Arial", 22, QFont.Weight.Bold))
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        email_layout = QHBoxLayout()
+        password_layout = QHBoxLayout()
+
         email = QLineEdit()
         email.setPlaceholderText("Email")
+        email.setFixedWidth(600)
 
         password = QLineEdit()
         password.setPlaceholderText("Password")
         password.setEchoMode(QLineEdit.EchoMode.Password)
+        password.setFixedWidth(600)
 
+        button_layout = QHBoxLayout()
         login_btn = QPushButton("Log In")
+        login_btn.setFixedWidth(300)
         login_btn.clicked.connect(go_dashboard)
 
         back_btn = QPushButton("Back")
         back_btn.clicked.connect(go_back)
+        back_btn.setFixedWidth(300)
 
         layout.addWidget(title)
-        layout.addWidget(email)
-        layout.addWidget(password)
-        layout.addWidget(login_btn)
-        layout.addWidget(back_btn)
+        email_layout.addWidget(email)
+        password_layout.addWidget(password)
+
+        layout.addLayout(email_layout)
+        layout.addLayout(password_layout)
+
+        layout.addSpacing(50)
+
+        button_layout.addWidget(login_btn)
+        button_layout.addWidget(back_btn)
+
+        layout.addLayout(button_layout)
+        layout.addSpacing(30)

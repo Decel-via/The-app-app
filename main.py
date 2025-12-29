@@ -8,11 +8,11 @@ from PyQt6.QtGui import QFont
 import os
 import sys
 
-import logIn 
+import StartUp
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = logIn.LogInWindow()
+    window = StartUp.LogInWindow()
     window.show()
     sys.exit(app.exec())

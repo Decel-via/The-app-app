@@ -180,6 +180,24 @@ class Dashboard(QMainWindow):
         menu.hide()
         # Attach menu to profile button
 
+        # qmenu background
+        menu.setStyleSheet("""
+            QMenu {
+                background-color: #1e293b;
+                color: white;
+                border: 1px solid #374151;
+                border-radius: 8px;
+                padding: 1px;
+            }
+            QMenu::item {
+                padding: 8px 24px;
+                border-radius: 4px;
+                color: white;
+            }
+            QMenu::item:selected {
+                background-color: #374151;
+            }  
+        """)
 
 
         # Avatar

@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QPixmap
 import sys
 
 from Dashboard import Dashboard
@@ -51,7 +52,10 @@ class StartUpPage(QWidget):
         main_layout = QVBoxLayout(self)
         #main_layout.setContentsMargins(50, 50, 50, 50)  # Make background visible around buttons
         #main_layout.setSpacing(20)
-        title_label = QLabel("Trakka")
+        title_label = QLabel()
+        pixmap = QPixmap("images/Logo.png")
+        pixmap = pixmap.scaled(1000, 800, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        title_label.setPixmap(pixmap)
         title_font = QFont("Arial", 24, QFont.Weight.Bold)
         title_label.setFont(title_font)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -76,6 +80,7 @@ class StartUpPage(QWidget):
 
         main_layout.addLayout(button_layout)
         main_layout.addLayout(lower_button_layout)
+
 
     def handle_login(self):
         print("Log In button clicked")

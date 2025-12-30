@@ -6,9 +6,9 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 import sys
 
-from Dashboard import Dashboard, QMainWindow #as Dashboard  
+from Dashboard import Dashboard
 from SignUp import SignUpPage
-from Login import LoginPage
+from LogIn import LoginPage
 
 
 class StartUpPage(QWidget):

@@ -1,18 +1,19 @@
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout, QFrame
-)
+    QVBoxLayout, QHBoxLayout, QFrame,QToolButton, QMenu )
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont,QAction
 from PyQt6.QtWidgets import QComboBox
 from PyQt6.QtCore import pyqtSignal
-
+from PyQt6.QtGui import QCursor
+from PyQt6.QtCore import QPoint
 
 
 
 
 class Dashboard(QMainWindow):
-    def __init__(self):
+    def __init__(self, go_back):
         super().__init__()
         self.setWindowTitle("Trakka Dashboard")
         self.setMinimumSize(1000, 600)
@@ -142,21 +143,47 @@ class Dashboard(QMainWindow):
             }
         """)
 
-        profile_box = QComboBox()
-        profile_box.addItems(["Profile", "Log Out"])
-        profile_box.activated.connect(lambda index: go_login() if profile_box.currentText() == "Log Out" else None)
-        profile_box.setStyleSheet("""
-            QComboBox {
-                background-color: #1e293b;
-                color: white;
-                border-radius: 8px;
-                padding: 8px;
-            }""")
-        
+        # profile_box = QComboBox()
+        # profile_box.addItems(["Profile", "Log Out"])
+        #
+        # #profile_box.activated.connect()
+        #
+        # profile_box.setStyleSheet("""
+        #     QComboBox {
+        #         background-color: #1e293b;
+        #         color: white;
+        #         border-radius: 8px;
+        #         padding: 8px;
+        #     }""")
+        # profile_box.hide()  # hidden until needed
+        #
+        # #profile_layout is login
+        #
         profile_layout = QHBoxLayout(profile_card)
+        # Create dropdown menu
+        menu = QMenu()
+
+        # Add menu actions
+        profile_action = QAction("Your profile", self)
+        settings_action = QAction("Settings", self)
+        logout_action = QAction("Sign out", self)
+
+        # Connect signals
+        profile_action.triggered.connect(lambda: print("Profile clicked"))
+        settings_action.triggered.connect(lambda: print("Settings clicked"))
+        logout_action.triggered.connect(lambda: print("Logged out"))
+
+        menu.addAction(profile_action)
+        menu.addAction(settings_action)
+        menu.addSeparator()
+        menu.addAction(logout_action)
+        menu.hide()
+        # Attach menu to profile button
+
+
 
         # Avatar
-        avatar = QLabel("👤")
+        avatar = ClickableLabel("👤")
         avatar.setFixedSize(55, 55)
         avatar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         avatar.setStyleSheet("""
@@ -166,8 +193,11 @@ class Dashboard(QMainWindow):
                 font-size: 18px;
                 font-weight: bold;
             }
+            QWidget:hover {
+                background-color: #334155;
+            }
         """)
-
+        avatar.clicked.connect(lambda: menu.hide() if menu.isVisible() else menu.show())
         # Name + role
         info_layout = QVBoxLayout()
         name = QLabel("User")
@@ -179,8 +209,11 @@ class Dashboard(QMainWindow):
         info_layout.addWidget(name)
         info_layout.addWidget(role)
 
+        #profile_layout
         profile_layout.addWidget(avatar)
         profile_layout.addLayout(info_layout)
+        profile_layout.addWidget(menu)
+
 
         right_layout.addWidget(profile_card)
         right_layout.addSpacing(15)
@@ -189,7 +222,10 @@ class Dashboard(QMainWindow):
         statistics = QLabel("Statistics")
         statistics.setFont(QFont("Segoe UI", 8, QFont.Weight.Bold))
         #placeholder.setStyleSheet("color:white; font-size:11px;")
+        right_layout.addWidget(menu)
         right_layout.addWidget(statistics)
+
+
 
         right_layout.addStretch()
 
@@ -207,7 +243,12 @@ class ClickableWidget(QWidget):
         self.clicked.emit()
         super().mousePressEvent(event)
 
+class ClickableLabel(QLabel):
+    clicked = pyqtSignal()
 
+    def mousePressEvent(self, event):
+        self.clicked.emit()
+        super().mousePressEvent(event)
 
 
 

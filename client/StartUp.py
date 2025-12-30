@@ -117,7 +117,7 @@ class LogInWindow(QMainWindow):
             self.show_start_up
         )
 
-        self.dashboard_page = Dashboard()
+        self.dashboard_page = Dashboard(self.show_start_up)
 
         # Add pages in a CLEAR order
         self.stack.addWidget(self.startup_page)   # index 0

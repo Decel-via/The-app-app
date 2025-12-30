@@ -8,7 +8,10 @@ from PyQt6.QtGui import QFont
 import os
 import sys
 
+
 import StartUp
+
+
 
 
 if __name__ == "__main__":

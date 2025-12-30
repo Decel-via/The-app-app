@@ -9,7 +9,7 @@ import sys
 
 
 class LoginPage(QWidget):
-    def __init__(self,go_back, go_dashboard): # add go_back and go_dashboard
+    def __init__(self,go_back, go_dashboard): # add callback for login and add callback for dashboard
         super().__init__()
 
         self.setStyleSheet("""
@@ -46,7 +46,7 @@ class LoginPage(QWidget):
         password_layout = QHBoxLayout()
 
         email = QLineEdit()
-        email.setPlaceholderText("Email")
+        email.setPlaceholderText("Email/ Username")
         email.setFixedWidth(600)
 
         password = QLineEdit()

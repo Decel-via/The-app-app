@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QComboBox
+from PyQt6.QtCore import pyqtSignal
 
 
 
@@ -49,10 +51,24 @@ class Dashboard(QMainWindow):
         left_layout.addWidget(title)
         left_layout.addSpacing(20)
 
-        for name in ["Home", "Tasks", "Projects", "Statistics", "Settings"]:
-            left_layout.addWidget(QPushButton(name))
+        
+        #Task button
+        task_button = QPushButton("Tasks")
+        left_layout.addWidget(task_button)
+
+        proj_button = QPushButton("Projects")
+        left_layout.addWidget(proj_button)
+
+        stat_button = QPushButton("Statistics")
+        left_layout.addWidget(stat_button)
+
+        settings_button = QPushButton("Settings")
+        left_layout.addWidget(settings_button)
+
 
         left_layout.addStretch()
+
+        
 
         # MAIN CONTENT AREA
         content = QFrame()
@@ -125,6 +141,18 @@ class Dashboard(QMainWindow):
                 border-radius: 12px;
             }
         """)
+
+        profile_box = QComboBox()
+        profile_box.addItems(["Profile", "Log Out"])
+        profile_box.activated.connect(lambda index: go_login() if profile_box.currentText() == "Log Out" else None)
+        profile_box.setStyleSheet("""
+            QComboBox {
+                background-color: #1e293b;
+                color: white;
+                border-radius: 8px;
+                padding: 8px;
+            }""")
+        
         profile_layout = QHBoxLayout(profile_card)
 
         # Avatar
@@ -169,6 +197,15 @@ class Dashboard(QMainWindow):
         main_layout.addWidget(left_sidebar)
         main_layout.addWidget(content, 1)   
         main_layout.addWidget(right_sidebar)
+
+        
+
+class ClickableWidget(QWidget):
+    clicked = pyqtSignal()
+
+    def mousePressEvent(self, event):
+        self.clicked.emit()
+        super().mousePressEvent(event)
 
 
 

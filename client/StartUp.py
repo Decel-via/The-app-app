@@ -1,145 +1,133 @@
+# -------------------------------------------------------------------
+# This file holds ONLY the StartUpPage UI/layout and theme toggle.
+# All navigation and stacking is handled in manager.py
+# -------------------------------------------------------------------
+
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout, QFrame, QStackedWidget, QLineEdit
+    QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
+    QFrame, QLineEdit, QSizePolicy
 )
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
-from PyQt6.QtGui import QPixmap
-import sys
-
-from Dashboard import Dashboard
-from SignUp import SignUpPage
-from LogIn import LoginPage
+from PyQt6.QtGui import QFont, QPixmap
 
 
 class StartUpPage(QWidget):
-    def __init__(self, switch_to_dashboard_callback, switch_to_signup_callback, switch_to_login_callback ):
+
+    def __init__(self,
+                 switch_to_dashboard_callback,
+                 switch_to_signup_callback,
+                 switch_to_login_callback,
+                 theme_manager):
+
         super().__init__()
+
+        # Callbacks passed from manager.py -> used when buttons clicked
         self.switch_to_dashboard = switch_to_dashboard_callback
         self.switch_to_signup = switch_to_signup_callback
         self.switch_to_login = switch_to_login_callback
 
+        self.theme_manager = theme_manager  # used for light/dark theme switching
 
-
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #0f172a;
-                color: white;
-                font-family: Segoe UI;
-            }
-           
-            QLineEdit {
-                background-color: #1e293b;
-                border-radius: 8px;
-                padding: 10px;
-                color: white;
-                border: none;
-            }
-            QPushButton {
-            
-                background-color: #1e293b;
-                color: white;
-                border-radius: 8px;
-                padding: 10px;
-                font-size: 15px;
-            }
-             
-            QPushButton:hover {
-                background-color: #334155;
-            }
-        """)
-        #]when self.setAutoFillBackground(True)
+        # ---------------------- MAIN LAYOUT ---------------------- #
         main_layout = QVBoxLayout(self)
-        #main_layout.setContentsMargins(50, 50, 50, 50)  # Make background visible around buttons
-        #main_layout.setSpacing(20)
-        title_label = QLabel()
-        pixmap = QPixmap("images/Logo.png")
-        pixmap = pixmap.scaled(1000, 800, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        title_label.setPixmap(pixmap)
-        title_font = QFont("Arial", 24, QFont.Weight.Bold)
-        title_label.setFont(title_font)
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        main_layout.addWidget(title_label)
+        main_layout.setContentsMargins(60, 30, 60, 40)
+        main_layout.setSpacing(20)
 
-        button_layout = QHBoxLayout()
-        lower_button_layout = QHBoxLayout()
+        # ---------------------- TOP BAR -------------------------- #
+        top_bar = QHBoxLayout()
+        top_bar.addStretch()
 
-        login_button = QPushButton("Log In")
+        self.theme_btn = QPushButton("☀")  # default dark -> button shows icon to switch to light
+        self.theme_btn.setFixedSize(36, 36)
+        self.theme_btn.clicked.connect(self.toggle_theme)
 
-        login_button.clicked.connect(self.handle_login)
-        button_layout.addWidget(login_button)
+        top_bar.addWidget(self.theme_btn)
+        main_layout.addLayout(top_bar)
 
-        signup_button = QPushButton("Sign Up")
-        signup_button.clicked.connect(self.handle_signup)
-        button_layout.addWidget(signup_button)
+        # ---------------------- CONTENT ----------------------  #
+        content = QHBoxLayout()
+        main_layout.addLayout(content)
 
-        guest_button = QPushButton("Continue as Guest")
-        guest_button.clicked.connect(self.handle_guest)
-        guest_button.setFixedWidth(500)
-        lower_button_layout.addWidget(guest_button)
+        # =========== LEFT SIDE — Logo + Brand Text =============== #
+        left = QVBoxLayout()
+        content.addLayout(left, 2)
 
-        main_layout.addLayout(button_layout)
-        main_layout.addLayout(lower_button_layout)
+        logo = QLabel()
+        pix = QPixmap("images/Logo.png")
+        if not pix.isNull():
+            pix = pix.scaled(108, 108, Qt.AspectRatioMode.KeepAspectRatio)
+            logo.setPixmap(pix)
+
+        title = QLabel("TRAKKA")
+        title.setFont(QFont("Segoe UI", 22, QFont.Weight.Bold))
+
+        row = QHBoxLayout()
+        row.addWidget(logo)
+        row.addWidget(title)
+        row.addStretch()
+        left.addLayout(row)
+
+        hero = QLabel("Stay on top of your tasks\nand projects.")
+        hero.setFont(QFont("Segoe UI", 22, QFont.Weight.DemiBold))
+
+        subtitle = QLabel("Create, track & complete tasks all in one place.")
+        subtitle.setObjectName("mutedLabel")
+
+        left.addSpacing(30)
+        left.addWidget(hero)
+        left.addWidget(subtitle)
+        left.addStretch()
+
+        # =========== RIGHT SIDE — Sign Up Card =================== #
+        right_container = QVBoxLayout()
+        content.addLayout(right_container, 3)
+
+        card = QFrame()
+        card.setObjectName("card")
+        card.setMaximumWidth(420)
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(32, 32, 32, 32)
+        layout.addWidget(QLabel("Create your account", font=QFont("Segoe UI", 18, QFont.Weight.Bold)))
+
+        # Form fields
+        row = QHBoxLayout()
+        self.first = QLineEdit(placeholderText="First Name")
+        self.last = QLineEdit(placeholderText="Last Name")
+        row.addWidget(self.first)
+        row.addWidget(self.last)
+        layout.addLayout(row)
+
+        self.email = QLineEdit(placeholderText="Email")
+        self.passwd = QLineEdit(placeholderText="Password")
+        self.passwd.setEchoMode(QLineEdit.EchoMode.Password)
+
+        layout.addWidget(self.email)
+        layout.addWidget(self.passwd)
+
+        # Create account btn
+        signup_btn = QPushButton("Create Account", objectName="primaryButton")
+        signup_btn.clicked.connect(self.switch_to_signup)
+        layout.addWidget(signup_btn)
+
+        # Continue as guest
+        guest = QPushButton("Continue as Guest")
+        guest.clicked.connect(self.switch_to_dashboard)
+        layout.addWidget(guest)
+
+        # Login option
+        login_row = QHBoxLayout()
+        login_row.addWidget(QLabel("Already have an account?", objectName="mutedLabel"))
+        login_btn = QPushButton("Log In", objectName="linkButton")
+        login_btn.clicked.connect(self.switch_to_login)
+        login_row.addWidget(login_btn)
+        layout.addLayout(login_row)
 
 
-    def handle_login(self):
-        print("Log In button clicked")
-        self.switch_to_login()
+        right_container.addStretch()
+        right_container.addWidget(card)
+        right_container.addStretch()
 
-    def handle_signup(self):
-        print("Sign Up button clicked")
-        self.switch_to_signup()
-
-    def handle_guest(self):
-        print("Continue as Guest button clicked")
-        self.switch_to_dashboard() 
-
-
-class LogInWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Trakka - Welcome")
-        self.setMinimumSize(1000, 600)
-        self.setStyleSheet("background-color: #0f172a;")
-
-        # ONE stacked widget
-        self.stack = QStackedWidget()
-        self.setCentralWidget(self.stack)
-
-        # Pages (callbacks ONLY)
-        self.startup_page = StartUpPage(
-            self.show_dashboard,
-            self.show_signup,
-            self.show_login
-        )
-
-        self.login_page = LoginPage(
-            self.show_start_up,
-            self.show_dashboard
-        )
-
-        self.signup_page = SignUpPage(
-            self.show_start_up
-        )
-
-        self.dashboard_page = Dashboard(self.show_start_up)
-
-        # Add pages in a CLEAR order
-        self.stack.addWidget(self.startup_page)   # index 0
-        self.stack.addWidget(self.dashboard_page) # index 1
-        self.stack.addWidget(self.signup_page)    # index 2
-        self.stack.addWidget(self.login_page)     # index 3
-
-        self.show_start_up()
-
-    def show_start_up(self):
-        self.stack.setCurrentIndex(0)
-
-    def show_dashboard(self):
-        self.stack.setCurrentIndex(1)
-
-    def show_signup(self):
-        self.stack.setCurrentIndex(2)
-
-    def show_login(self):
-        self.stack.setCurrentIndex(3)
+    # ------------ THEME SWITCH LOGIC ------------ #
+    def toggle_theme(self):
+        self.theme_manager.toggle()          # swap theme
+        self.theme_btn.setText("🌙" if self.theme_manager.current_theme == "light" else "☀")

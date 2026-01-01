@@ -9,13 +9,13 @@ import os
 import sys
 
 
-import StartUp
+from manager import LogInWindow
 
 
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = StartUp.LogInWindow()
+    window = LogInWindow()
     window.show()
     sys.exit(app.exec())

@@ -1,79 +1,93 @@
-
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout, QFrame, QStackedWidget, QLineEdit
+    QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
+    QFrame, QLineEdit, QCheckBox
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
-import sys
 
 
 class LoginPage(QWidget):
-    def __init__(self,go_back, go_dashboard): 
+    def __init__(self, go_back, go_dashboard):
         super().__init__()
 
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #0f172a;
-                color: white;
-                font-family: Segoe UI;
-            }
-            QLineEdit {
-                background-color: #1e293b;
-                border-radius: 8px;
-                padding: 10px;
-                color: white;
-                border: none;
-            }
-            QPushButton {
-                background-color: #1e293b;
-                color: white;
-                border-radius: 8px;
-                padding: 10px;
-            }
-            QPushButton:hover {
-                background-color: #334155;
-            }
-        """)
+        # For targeting page
+        self.setObjectName("loginPage")
 
-        layout = QVBoxLayout(self)
+        # === Outer layout: center content on dark background === #
+        outer_layout = QVBoxLayout(self)
+        outer_layout.setContentsMargins(60, 60, 60, 60)
+        outer_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        title = QLabel("Log In")
-        title.setFont(QFont("Arial", 22, QFont.Weight.Bold))
+        # === Card === #
+        card = QFrame()
+        card.setObjectName("card") # from QFrame#card from theme_manager
+        card.setFixedWidth(420)
+
+        card_layout = QVBoxLayout(card)
+        card_layout.setContentsMargins(36, 32, 36, 32)
+        card_layout.setSpacing(16)
+
+        # Title
+        title = QLabel("Welcome back 👋")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title.setFont(QFont("Segoe UI", 18, QFont.Weight.Bold))
+        card_layout.addWidget(title)
 
-        email_layout = QHBoxLayout()
-        password_layout = QHBoxLayout()
+        # Email label + input
+        email_label = QLabel("Email")
+        email_label.setObjectName("mutedLabel")  # muted label style from theme_manager
+        card_layout.addWidget(email_label)
 
-        email = QLineEdit()
-        email.setPlaceholderText("Email/ Username")
-        email.setFixedWidth(600)
+        self.email_input = QLineEdit()
+        self.email_input.setPlaceholderText("Enter your email")
+        card_layout.addWidget(self.email_input)
 
-        password = QLineEdit()
-        password.setPlaceholderText("Password")
-        password.setEchoMode(QLineEdit.EchoMode.Password)
-        password.setFixedWidth(600)
+        # Password label + input
+        password_label = QLabel("Password")
+        password_label.setObjectName("mutedLabel")
+        card_layout.addWidget(password_label)
 
-        button_layout = QHBoxLayout()
+        self.password_input = QLineEdit()
+        self.password_input.setPlaceholderText("Enter your password")
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        card_layout.addWidget(self.password_input)
+
+        # Remember me + Forgot password
+        options_layout = QHBoxLayout()
+        self.remember_me = QCheckBox("Remember me")
+        options_layout.addWidget(self.remember_me)
+
+        options_layout.addStretch()
+
+        forgot_btn = QPushButton("Forgot password?")
+        forgot_btn.setObjectName("linkButton")   # link style from theme_manager
+        forgot_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        options_layout.addWidget(forgot_btn)
+
+        card_layout.addLayout(options_layout)
+
+        # Log In button 
         login_btn = QPushButton("Log In")
-        login_btn.setFixedWidth(300)
+        login_btn.setObjectName("primaryButton")  
+        login_btn.setFixedHeight(40)
+        login_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         login_btn.clicked.connect(go_dashboard)
+        card_layout.addWidget(login_btn)
 
-        back_btn = QPushButton("Back")
-        back_btn.clicked.connect(go_back)
-        back_btn.setFixedWidth(300)
+        # Bottom row: New to TRAKKA? Create an account >
+        bottom_layout = QHBoxLayout()
+        new_label = QLabel("New to TRAKKA?")
+        new_label.setObjectName("mutedLabel")
+        bottom_layout.addWidget(new_label)
 
-        layout.addWidget(title)
-        email_layout.addWidget(email)
-        password_layout.addWidget(password)
+        signup_btn = QPushButton("Create an account  >")
+        signup_btn.setObjectName("linkButton")
+        signup_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        signup_btn.clicked.connect(go_back)
+        bottom_layout.addWidget(signup_btn)
 
-        layout.addLayout(email_layout)
-        layout.addLayout(password_layout)
+        bottom_layout.addStretch()
+        card_layout.addLayout(bottom_layout)
 
-        layout.addSpacing(50)
-
-        button_layout.addWidget(login_btn)
-        button_layout.addWidget(back_btn)
-
-        layout.addLayout(button_layout)
-        layout.addSpacing(30)
+        # Add card to outer layout
+        outer_layout.addWidget(card)

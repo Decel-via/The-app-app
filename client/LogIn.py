@@ -3,7 +3,8 @@ from PyQt6.QtWidgets import (
     QFrame, QLineEdit, QCheckBox
 )
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QPixmap
+
 
 
 class LoginPage(QWidget):

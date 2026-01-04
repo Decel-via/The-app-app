@@ -13,14 +13,17 @@ from LogIn import LoginPage
 from Dashboard import Dashboard
 
 from theme_switch.theme_manager import ThemeManager
+from PyQt6.QtGui import QIcon
 
 
 class LogInWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Trakka - Welcome")
+        self.setWindowTitle(" ")
+        self.setWindowIcon(QIcon("images/Logo.png"))
         self.setMinimumSize(1100, 650)
+        
 
         # Theme system
         self.theme = ThemeManager("dark")  # default theme
